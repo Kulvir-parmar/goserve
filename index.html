@@ -4,13 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.5.0"></script>
     <title>HTMX LOGIN</title>
 </head>
 
-<body>
-    <h1>HTMX</h1>
+<body class="flex">
+    <div class="w-1/2 flex flex-col items-center bg-sky-200 text-gray-800 h-screen">
+        <h2 class="text-2xl font-semibold py-20">HTMX CEO's LIST</h2>
 
-    <script src="https://unpkg.com/tmx.org@1.5.0"></script>
+        <form hx-post="/add-name" hx-target="#name-list" hx-swap="beforeend" class="flex flex-col space-y-4"
+            hx-indicator="#spinner">
+
+            <label class="relative flex items-center text-gray-500 focus-within:text-gray-800">
+                <input type="text" name="username" required
+                    class="py-2 px-3 font-semibold rounded-lg bg-sky-200/90 outline-none ring-2 ring-gray-500 focus:ring-gray-800 foucs:ring-2 w-72 peer bg-inherit">
+                <span
+                    class="absolute left-3 px-[1px] pointer-events-none peer-focus:text-sm peer-focus:-translate-y-5 transition bg-sky-200 peer-valid:text-sm peer-valid:-translate-y-5">
+                    Username
+                </span>
+            </label>
+
+            <button type="submit" class="bg-red-200 rounded-md py-2 px-3 w-1/2 mx-auto">
+                Add to List
+            </button>
+
+        </form>
+    </div>
+
+    <div class="w-1/2 flex flex-col items-center justify-center">
+        <ul class="w-72 space-y-2" id="name-list">
+            {{ range .users }}
+            {{ block "names" .}}
+            <li class='rounded-lg px-6 py-3 text-semibold text-lg bg-sky-200'> {{ . }} </li>
+            {{ end }}
+            {{ end }}
+        </ul>
+    </div>
 </body>
 
 </html>

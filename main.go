@@ -7,14 +7,30 @@ import (
 	"net/http"
 )
 
-func main() {
-	fmt.Println("foo: 69")
+var users = []string{"JJ"}
 
-	h1 := func(w http.ResponseWriter, _ *http.Request) {
+func main() {
+	fmt.Println("420: 69")
+
+	index := func(w http.ResponseWriter, _ *http.Request) {
 		tmpl := template.Must(template.ParseFiles("index.html"))
-		tmpl.Execute(w, nil)
+		users := map[string][]string{
+			"users": users,
+		}
+		tmpl.Execute(w, users)
 	}
-	http.HandleFunc("/", h1)
+
+	addName := func(w http.ResponseWriter, r *http.Request) {
+		log.Print("HTMX baby")
+		username := r.FormValue("username")
+		users = append(users, username)
+
+		tmpl := template.Must(template.ParseFiles("index.html"))
+		tmpl.ExecuteTemplate(w, "names", username)
+	}
+
+	http.HandleFunc("/", index)
+	http.HandleFunc("/add-name", addName)
 
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
